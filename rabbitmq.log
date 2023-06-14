@@ -1,0 +1,3 @@
+2023-03-12 17:46:37 com.rabbitmq.client.impl.ForgivingExceptionHandler.log(ForgivingExceptionHandler.java:115)  An unexpected connection driver error occured (Exception message: Connection reset)
+2023-03-12 17:46:42 com.rabbitmq.client.impl.recovery.AutorecoveringConnection.beginAutomaticRecovery(AutorecoveringConnection.java:571)  Connection amqp://Irene@1.15.121.102:5672//lh has recovered
+2023-03-12 17:46:42 com.rabbitmq.client.impl.recovery.AutorecoveringConnection.recoverChannels(AutorecoveringConnection.java:630)  Channel AMQChannel(amqp://Irene@1.15.121.102:5672//lh,1) has recovered
