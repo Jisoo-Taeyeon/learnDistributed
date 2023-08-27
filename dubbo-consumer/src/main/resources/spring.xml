@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo.xsd
+">
+    <!-- 1、 服务提供方在zookeeper 中 的别名-->
+    <dubbo:application name="dubbo-server"/>
+    <!-- 2、 注册类中心地址 -->
+    <dubbo:registry address="zookeeper://192.168.204.141:2181"/>
+    <!-- 3、 扫描类（将什么包下的类作为服务提供类） -->
+    <dubbo:annotation package="controller"/>
+
+    <!--让监控 去注册中心自动去 找任务-->
+    <dubbo:monitor protocol="registry"/>
+
+    <!--默认是true 抛异常 ； false ： 不抛异常-->
+    <dubbo:consumer check="true"/>
+
+    <!--设置超时时间默认1s 设置2s  当除锈你失败时，自动切换其他服务器,dubbo 重试缺省值为2次，设置重试次数为 3 次-->
+    <dubbo:provider timeout="2000" retries="3"/>
+    <!--如果version 是 * 随机调用  使用 stub 进行 本地存根-->
+    <!--Random LoadBalance:基于权重的随机负载均衡机制 -->
+    <!--RoundRobin LoadBalance:基于权重的轮询负载均衡机制-->
+    <!--LeastActive LoadBalance:最少活跃数-负载均衡机制（谁速度快就找谁-->
+    <!--ConsistentHash LoadBalance:一致性hash-负载均衡机制-->
+
+    <dubbo:reference loadbalance="roundrobin" interface="org.example.service.HelloService" id="helloService" version="1.0.0" stub="stub.HelloServiceStub">
+        <dubbo:method name="sayHello" retries="3"/>
+    </dubbo:reference>
+
+
+
+</beans>
