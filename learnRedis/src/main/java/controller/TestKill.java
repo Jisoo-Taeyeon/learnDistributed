@@ -27,15 +27,21 @@ public class TestKill {
     private Redisson redisson;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     *
+     *  秒杀系统
+     * @return {@link String}
+     */
     @RequestMapping("kill")
     public @ResponseBody synchronized String kill(){
         String productKey = "XIAOMI-12PRO";
         //通过redisson 获取锁  底层源码就是继承了setnx，过期时间操作等
         RLock rLock = redisson.getLock(productKey);
-        // 上锁  过期时间为30miao
+        // 上锁  过期时间为30s
         rLock.lock(30, TimeUnit.SECONDS);
         try {
-            //从redis中获取手机的库存数量
+            //1.从redis中获取手机的库存数量
             int phoneCount = Integer.parseInt(Objects.requireNonNull(stringRedisTemplate.opsForValue().get("phone")));
             //2.判断手机数量是否够秒杀的
             if (phoneCount > 0) {
@@ -60,9 +66,9 @@ public class TestKill {
     public Redisson redisson(){
         Config config = new Config();
         //使用单个redis服务器
-        config.useSingleServer().setAddress("").setDatabase(0);
+        config.useSingleServer().setAddress("redis://192.168.204.141.6379").setDatabase(0);
         //使用集群redis
-//        config.useClusterServers().setScanInterval(2000).addNodeAddress("", "", "");
+//        config.useClusterServers().setScanInterval(2000).addNodeAddress("redis://192.168.204.141.6379", "redis://192.168.204.142.6379", "redis://192.168.204.143.6379");
         return (Redisson) Redisson.create(config);
     }
 }
